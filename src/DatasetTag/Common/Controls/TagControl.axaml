@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             BorderBrush="{Binding Category, Converter={StaticResource TagCategoryToBorderConverter}}" BorderThickness="1"
+             x:Class="DatasetTag.Common.Controls.TagControl">
+  <StackPanel Orientation="Horizontal" ClipToBounds="True" Name="container" Background="{Binding Category, Converter={StaticResource TagCategoryToBackgroundConverter}}">
+    <TextBox Tapped="Input_Tapped" DoubleTapped="Input_DoubleTapped" LostFocus="Input_LostFocus" GotFocus="Input_GotFocus" BorderThickness="0" Classes="inputField" Text="{Binding Text, Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly}" TextWrapping="NoWrap" HorizontalAlignment="Stretch" TextAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="14" Padding="3,0" Background="Transparent"/>
+    <Button Command="{Binding RemoveTag_Command, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" IsVisible="{Binding IsCloseButtonVisible}" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="12" Width="15" Height="15" CornerRadius="10" Margin="2,0" Padding="0" BorderThickness="0">
+      <Image Source="/Assets/close.png"/>
+    </Button>
+  </StackPanel>
+</UserControl>

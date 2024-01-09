@@ -1,0 +1,61 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--TEXTBOX-->
+  <Style Selector="TextBox.inputField">   
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="MinHeight" Value="10"/>
+    <Setter Property="MinWidth" Value="10"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Background="{TemplateBinding Background}">
+          <DataValidationErrors>
+            <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}" VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+              <TextPresenter Name="PART_TextPresenter" Margin="{TemplateBinding Padding}"
+                    Text="{TemplateBinding Text, Mode=TwoWay}"
+                    CaretIndex="{TemplateBinding CaretIndex}"
+                    SelectionStart="{TemplateBinding SelectionStart}"
+                    SelectionEnd="{TemplateBinding SelectionEnd}"
+                    TextAlignment="{TemplateBinding TextAlignment}"
+                    TextWrapping="{TemplateBinding TextWrapping}"
+                    PasswordChar="{TemplateBinding PasswordChar}"
+                    SelectionBrush="{TemplateBinding SelectionBrush}"
+                    SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                    CaretBrush="{TemplateBinding CaretBrush}"/>
+            </ScrollViewer>
+          </DataValidationErrors>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <!--<Style Selector="TextBox:pointerover /template/ Border#border">
+    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderHighBrush}"/>
+  </Style>-->
+
+  <!--<Style Selector="TextBox:focus">
+    <Setter Property="Background" Value="DarkGray"/>
+  </Style>-->
+
+  <!--<Style Selector="TextBox:not(:focus)">
+    <Setter Property="Background" Value="{DynamicResource textBoxBackgroundNotFocused}"/>
+  </Style>-->
+
+  <!--<Style Selector="TextBox:error /template/Border#border">
+    <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
+  </Style>-->
+  
+  <Style Selector="TextBox">
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+  <!--<Style Selector="TextBox:disabled /template/Border#border">
+    <Setter Property="Background" Value="{DynamicResource textBoxBackgroundFocused}"/>
+  </Style>-->
+  <!--<Style Selector="TextBox[IsReadOnly=True]">
+    <Setter Property="Background" Value="Red"/>
+  </Style>-->
+  <Style Selector="TextBox[IsReadOnly=False]">
+    <Setter Property="Cursor" Value="IBeam" />
+    <Setter Property="Background" Value="DarkGray"/>
+  </Style>
+  <!--END TEXTBOX-->
+
+</Styles>

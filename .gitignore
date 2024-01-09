@@ -1,0 +1,8 @@
+src/.vs/*
+src/.idea/*
+src/.editorconfig
+src/DatasetTag/obj/*
+bin/*
+.git/*
+datasettag.key
+datasettag.key.pub

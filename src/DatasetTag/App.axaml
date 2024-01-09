@@ -1,0 +1,16 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:DatasetTag.Common.Converters"
+             x:Class="DatasetTag.App">
+    <Application.Styles>
+      <SimpleTheme />
+      <!--<FluentTheme Mode="Light"/>-->
+      <StyleInclude Source="/Common/Styles/TextBox.axaml"/>
+      <StyleInclude Source="/Common/Styles/ScrollBar.axaml"/>
+      <StyleInclude Source="/Common/Styles/ScrollViewer.axaml"/>
+    </Application.Styles>
+  <Application.Resources>
+    <converters:TagCategoryToBackgroundConverter x:Key="TagCategoryToBackgroundConverter"/>
+    <converters:TagCategoryToBorderConverter x:Key="TagCategoryToBorderConverter"/>
+  </Application.Resources>
+</Application>
