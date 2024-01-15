@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:DatasetTag.Common.Controls"
         xmlns:enums="clr-namespace:DatasetTag.Common.Enums"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
         x:Class="DatasetTag.MainWindow"
         Title="Dataset Tag" WindowStartupLocation="CenterScreen" WindowState="Maximized" Icon="/Assets/tag.png" Opened="MainWindow_Opened" KeyDown="MainWindow_KeyDown" KeyUp="MainWindow_KeyUp" SizeChanged="MainWindow_SizeChanged" PositionChanged="MainWindow_PositionChanged" LayoutUpdated="MainWindow_LayoutUpdated" MinWidth="800" MinHeight="600">
   <Window.Resources>
@@ -27,7 +27,7 @@
 
     <Grid Grid.Row="2" x:Name="grdColumns">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="500" MinWidth="150" />
+        <ColumnDefinition Width="300" MinWidth="150" />
         <ColumnDefinition Width="5" />
         <ColumnDefinition Width="*" MinWidth="300" />
       </Grid.ColumnDefinitions>
@@ -43,8 +43,11 @@
           <ColumnDefinition Width="50*" MinWidth="265" />
         </Grid.ColumnDefinitions>
         
-        <ScrollViewer Grid.Column="0" Background="LightCyan" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer x:Name="scrTags" Grid.Column="0" Background="LightCyan" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
           <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+            <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+              <CheckBox Content="Remove tags" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,6,6,0" Height="32" FontSize="14" Checked="CheckBox_CheckedChanged" Unchecked="CheckBox_CheckedChanged"/>
+            </Grid>
             <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
               <Label Content="Trigger word" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,10,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
               <TextBox x:Name="txtTrigger" Background="#FFFFD1DC" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,6,6,0" Height="32" FontSize="14" TextChanged="Trigger_TextChanged"/>

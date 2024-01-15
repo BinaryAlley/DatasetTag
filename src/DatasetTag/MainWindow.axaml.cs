@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -15,11 +16,14 @@ using DatasetTag.Common.MVVM;
 using MessageBox.Avalonia;
 using MessageBox.Avalonia.Enums;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 #endregion
@@ -109,7 +113,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         var result = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions() { AllowMultiple = false, Title = "Choose dataset images directory" });
         if (result.Count > 0 && result[0].TryGetUri(out Uri? directory))
-            txtInputPath.Text = directory.AbsolutePath;
+            txtInputPath.Text = directory.LocalPath;
     }
 
     /// <summary>
@@ -124,39 +128,74 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         grdImages.Children.Clear();
         int column = 0;
         int margin = 5;
-        // iterate all files in the input directory
-        foreach (string file in Directory.GetFiles(txtInputPath.Text!))
+        await Task.Run(async () =>
         {
-            string ext = Path.GetExtension(file).ToLower();
-            if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".bmp") // only process images
+            // iterate all files in the input directory
+            var filePaths = Directory.GetFiles(txtInputPath.Text!, "*.jpg")
+                                     .Concat(Directory.GetFiles(txtInputPath.Text!, "*.jpeg"))
+                                     .Concat(Directory.GetFiles(txtInputPath.Text!, "*.png"))
+                                     .Concat(Directory.GetFiles(txtInputPath.Text!, "*.bmp"));
+            var loadTasks = filePaths.Select(async file =>
             {
-                // for each image file, create a grid that contains an image and a drag panel, and add it to the previews list
-                Grid container = new();
-                container.Width = grdContainer.RowDefinitions[0].ActualHeight - 70;
-                container.Height = grdContainer.RowDefinitions[0].ActualHeight - 70;
-                container.Margin = new Thickness(column * ((grdContainer.RowDefinitions[0].ActualHeight - 70) + margin), 0, 0, 0);
-                container.HorizontalAlignment = HorizontalAlignment.Left;
-                container.VerticalAlignment = VerticalAlignment.Top;
-                container.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0), 0.1);
+                using (var tempImage = await SixLabors.ImageSharp.Image.LoadAsync(file))
+                {
+                    var originalSize = new Avalonia.Size(tempImage.Width, tempImage.Height);
+                    var resizedImage = await LoadResizedImageAsync(tempImage, (int)grdContainer.RowDefinitions[0].ActualHeight - 70, (int)grdContainer.RowDefinitions[0].ActualHeight - 70);
+                    return new { FilePath = file, Image = resizedImage, OriginalSize = originalSize };
+                }
+            });
 
-                var bitmap = new Bitmap(file);
-                Image image = new();
-                image.Source = bitmap;
-                image.Width = grdContainer.RowDefinitions[0].ActualHeight - 70;
-                image.Height = grdContainer.RowDefinitions[0].ActualHeight - 70;
-                image.Margin = new Thickness(0);
-                image.HorizontalAlignment = HorizontalAlignment.Left;
-                image.VerticalAlignment = VerticalAlignment.Top;
-                image.Cursor = new Cursor(StandardCursorType.Hand);
-                image.Tag = file; // store the path of the original image file
-                image.PointerPressed += Thumbnail_PointerPressed;
-                ToolTip.SetTip(image, file);
-                container.Children.Add(image);
+            var loadedImages = await Task.WhenAll(loadTasks);
+            foreach (var loadedImage in loadedImages)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    // for each image file, create a grid that contains an image and a drag panel, and add it to the previews list
+                    Grid container = new();
+                    container.Width = grdContainer.RowDefinitions[0].ActualHeight - 70;
+                    container.Height = grdContainer.RowDefinitions[0].ActualHeight - 70;
+                    container.Margin = new Thickness(column * ((grdContainer.RowDefinitions[0].ActualHeight - 70) + margin), 0, 0, 0);
+                    container.HorizontalAlignment = HorizontalAlignment.Left;
+                    container.VerticalAlignment = VerticalAlignment.Top;
+                    container.Background = new SolidColorBrush(Avalonia.Media.Color.FromRgb(0, 0, 0), 0.1);
 
-                grdImages.Children.Add(container);
-                column++;
+                    Avalonia.Controls.Image image = new();
+                    image.Source = loadedImage.Image;
+                    image.Width = grdContainer.RowDefinitions[0].ActualHeight - 70;
+                    image.Height = grdContainer.RowDefinitions[0].ActualHeight - 70;
+                    image.Margin = new Thickness(0);
+                    image.HorizontalAlignment = HorizontalAlignment.Left;
+                    image.VerticalAlignment = VerticalAlignment.Top;
+                    image.Cursor = new Cursor(StandardCursorType.Hand);
+                    image.Tag = loadedImage.FilePath; // store the path of the original image file
+                    image.PointerPressed += Thumbnail_PointerPressed;
+                    ToolTip.SetTip(image, loadedImage.FilePath);
+                    container.Children.Add(image);
+
+                    grdImages.Children.Add(container);
+                    column++;
+                });
             }
-        }
+        });
+    }
+
+    /// <summary>
+    /// Loads an image and returns a scaled down version of it, as Bitmap
+    /// </summary>
+    /// <param name="image">The image to load</param>
+    /// <param name="targetWidth">The width of the scaled down bitmap</param>
+    /// <param name="targetHeight">The height of the scaled down bitmap</param>
+    /// <returns>A scaled down bitmap of the original image</returns>
+    public static async Task<Bitmap> LoadResizedImageAsync(SixLabors.ImageSharp.Image image, int targetWidth, int targetHeight)
+    {
+        // Calculate scale ratio to maintain aspect ratio
+        var scale = Math.Min(targetWidth / (float)image.Width, targetHeight / (float)image.Height);
+
+        image.Mutate(x => x.Resize((int)(image.Width * scale), (int)(image.Height * scale)));
+        var memoryStream = new MemoryStream();
+        await image.SaveAsBmpAsync(memoryStream);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        return new Bitmap(memoryStream);
     }
 
     #region add new tags
@@ -773,12 +812,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// </summary>
     private void Thumbnail_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is Image thumbnail) // each thumbnail stores its original image path in its Tag property, use that to display the full width view
+        if (sender is Avalonia.Controls.Image thumbnail) // each thumbnail stores its original image path in its Tag property, use that to display the full width view
         {
             imgPreview.Source = new Bitmap(thumbnail.Tag!.ToString()!);
             txtSelectedImage.Text = Path.GetFileNameWithoutExtension(thumbnail.Tag.ToString());
             txtSelectedImage.Tag = thumbnail.Tag;
             grdSelectedTags.Children.Clear();
+            scrTags.ScrollToHome();
             // if there are saved tags for the selected image, load them
             string allCaptionsFilePath = Path.Combine(Path.GetDirectoryName(thumbnail.Tag.ToString())!, "captions.json");
             if (File.Exists(allCaptionsFilePath))
@@ -803,10 +843,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Event handler for tag controls Click event
     /// </summary>
+    /// <param name="sender">The tag control that initiated the Click event</param>
     /// <param name="text">The text of the clicked tag control</param>
     /// <param name="category">The category of the clicked tag control</param>
-    private async void Tag_Click(string text, TagCategory category)
+    private async void Tag_Click(TagControl sender, string text, TagCategory category)
     {
+        if (sender?.Parent?.Name == nameof(grdSelectedTags))
+            return; // ignore clicks on already selected tags
         Dictionary<TagCategory, List<TagControl>> groupedTags = new();
         // group the texts by category
         foreach (TagControl tagControl in FindControls<TagControl>(grdSelectedTags))
@@ -1084,6 +1127,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             tagControl.IsCloseButtonVisible = false;
     }
 
+    /// <summary>
+    /// Handles Remove Tags's Checked and Unchecked events
+    /// </summary>
+    private void CheckBox_CheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox checkBox)
+            foreach (TagControl tagControl in FindControls<TagControl>(grdContainer))
+                tagControl.IsCloseButtonVisible = checkBox.IsChecked == true;
+    }
+
     #region adding new tag
     /// <summary>
     /// Handles type name's KeyUp event
@@ -1245,8 +1298,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void GridSplitter_DragDelta(object? sender, VectorEventArgs e)
     {
         SetWrapPanelsMaxWidth();
-        Configuration!.Application!.TagCategoriesPanelWidth = grdTags.ColumnDefinitions[0].ActualWidth;
-        Configuration!.Application!.ImagePreviewPanelWidth = grdColumns.ColumnDefinitions[0].ActualWidth;
+        Configuration!.Application!.TagCategoriesPanelWidth = double.IsNaN(grdTags.ColumnDefinitions[0].ActualWidth) ? 265 : grdTags.ColumnDefinitions[0].ActualWidth;
+        Configuration!.Application!.ImagePreviewPanelWidth = double.IsNaN(grdColumns.ColumnDefinitions[0].ActualWidth) ? 150 : grdColumns.ColumnDefinitions[0].ActualWidth;
         Configuration.UpdateConfiguration();
     }
 
@@ -1303,9 +1356,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Handles main window's Opened event
     /// </summary>
-    private void MainWindow_Opened(object? sender, EventArgs e)
+    private async void MainWindow_Opened(object? sender, EventArgs e)
     {
-        string configurationFilePath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+        string configurationFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "appsettings.json");
         if (File.Exists(configurationFilePath))
         {
             Configuration = JsonConvert.DeserializeObject<AppConfig>(File.ReadAllText(configurationFilePath)) ?? throw new InvalidOperationException("Cannot deserialize appsettings.json!");
@@ -1323,13 +1376,18 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             else
             {
                 Configuration!.Application!.ImagePreviewPanelWidth = 490;
-                Configuration!.Application!.TagCategoriesPanelWidth = (Width - 500) / 2;
+                Configuration!.Application!.TagCategoriesPanelWidth = double.IsNaN(Width) ? 265 : (Width - 500) / 2;
                 Configuration.Application.IsFirstRun = false;
                 Configuration.UpdateConfiguration();
             }
             grdColumns.ColumnDefinitions[0].Width = new GridLength(Configuration!.Application!.ImagePreviewPanelWidth);
             grdTags.ColumnDefinitions[0].Width = new GridLength(Configuration!.Application!.TagCategoriesPanelWidth);
             grdTags.ColumnDefinitions[2].Width = new GridLength(grdTags.Bounds.Width - grdTags.ColumnDefinitions[0].ActualWidth);
+        }
+        else
+        {
+            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "The configuration file appsettings.json was not found in the application's directory!\n" + configurationFilePath, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
+            Close();
         }
         SetWrapPanelsMaxWidth();
         PopulateDefaultCategories();

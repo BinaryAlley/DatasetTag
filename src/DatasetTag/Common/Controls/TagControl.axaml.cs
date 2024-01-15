@@ -26,6 +26,7 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
     public new event PropertyChangedEventHandler? PropertyChanged;
     private readonly DispatcherTimer tapTimer;
     private bool isDoubleTap = false;
+    private string? internalText;
     #endregion
 
     #region ================================================================= BINDING COMMANDS ==============================================================================
@@ -65,7 +66,7 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
     #region ==================================================================== PROPERTIES =================================================================================
     public Action<TagControl>? OnUpdateText { get; set; }
     public Action<TagControl>? OnCloseRequest { get; set; }
-    public Action<string, TagCategory>? OnClick { get; set; }
+    public Action<TagControl, string, TagCategory>? OnClick { get; set; }
     #endregion
 
     #region ============================================================== DEPENDENCY PROPERTIES ============================================================================
@@ -164,6 +165,15 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Handles input's KeyDown event
+    /// </summary>
+    private void Input_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+            Focus();
+    }
+
+    /// <summary>
     /// Handles input's LostFocus event
     /// </summary>
     private void Input_LostFocus(object? sender, RoutedEventArgs e)
@@ -172,7 +182,10 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
         {
             IsReadOnly = true; // exit edit mode
             textBox.Background = new SolidColorBrush(Color.FromRgb(0, 0, 0), 0);
-            OnUpdateText?.Invoke(this);
+            if (!string.IsNullOrWhiteSpace(textBox.Text))
+                OnUpdateText?.Invoke(this);
+            else
+                textBox.Text = internalText;
         }
     }
 
@@ -187,6 +200,7 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
             IsReadOnly = false; // enter edit mode
             if (sender is TextBox textBox)
             {
+                internalText = textBox.Text;
                 textBox.SelectionStart = textBox.Text?.Length ?? 0;
                 textBox.Background = new SolidColorBrush(Color.FromRgb(0,0,0), 0.2);
                 textBox.Focus();
@@ -205,7 +219,7 @@ public partial class TagControl : UserControl, INotifyPropertyChanged
         tapTimer.Stop();
         if (!isDoubleTap)  // handle the single tap event
             if (IsReadOnly) // ignore single taps if its in edit mode
-                OnClick?.Invoke(Text!, Category);
+                OnClick?.Invoke(this, Text!, Category);
         isDoubleTap = false;
     }
 

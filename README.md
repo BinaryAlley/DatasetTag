@@ -30,6 +30,54 @@ Dataset Tag is a free and open-source tool designed to make the process of image
 - **Memory Feature**: Remembers both the tags in each category and the tags used for each image, allowing for easy edits later.
 - **Draggable Panel Columns**: Each column has a grid splitter, which can be used to resize them in any ratio you desire.
 
+## Compiling from Source
+
+This is an optional step, there are [releases](https://github.com/BinaryAlley/DatasetTag/releases) that can be used as-is. But for those interested in compiling Dataset Tag from the source code, here's a step-by-step guide to get you started. This process requires a basic understanding of software development tools and the command line.
+
+### Prerequisites
+
+Before you begin, ensure that you have the following installed on your system:
+
+1. .NET 7.0 SDK: Dataset Tag is built using .NET 7.0. Download and install the .NET 7.0 SDK from [Microsoft's official .NET download page](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
+2. Git: To clone the repository, you'll need Git installed. You can download it from [git-scm.com](https://git-scm.com/).
+
+### Cloning the Repository
+
+1. Open a terminal or command prompt.
+2. Clone the Dataset Tag repository using Git:
+```bash
+git clone https://github.com/BinaryAlley/DatasetTag
+```    
+
+### Building the Application
+
+1. Navigate to the cloned repository's directory:
+```bash
+cd DatasetTag/src
+```
+2. Build the application using the .NET CLI:
+```bash
+dotnet build
+```
+
+### Running the Application from Source
+
+After successfully building the application, you can run it directly from the source:
+```bash
+dotnet run --project DatasetTag/DatasetTag.csproj
+```
+
+### Packaging for Distribution
+
+To create a distributable package of the application, run the following command:
+```bash
+cd DatasetTag
+dotnet publish -c Release -r [Runtime Identifier]
+```
+Replace `[Runtime Identifier]` with your target platform's runtime identifier, such as `win-x64`, `linux-x64`, or `osx-x64`.
+
+The executable file should be located in the `bin\Release\net7.0\[Runtime Identifier]` directory, starting from the root directory where the repository was cloned.
+
 ## Running the Application
 
 Dataset Tag was built using [Avalonia UI](https://avaloniaui.net/), so it is cross-platform and can be run on Linux, Windows, macOS. The process varies slightly depending on the operating system.
@@ -65,7 +113,7 @@ Dataset Tag was built using [Avalonia UI](https://avaloniaui.net/), so it is cro
 Some categories only allow you to select a single tag (example: **Shot** - you cannot have an image where the subject is in both close-up and full-body shot).
 7. If some category does not contain a tag that you want, you can type that tag in the corresponding text field, and then click **Add**, or press Enter.
 8. If there are elements that you feel do not belong to any category, you can add them using the **Miscellaneous** category. 
-9. If there are tags that you want to remove from the selected caption tags, or even tags that you want to remove from the predefined categories, press the Control key. While holding it, each
+9. If there are tags that you want to remove from the selected caption tags, or even tags that you want to remove from the predefined categories, you can check the **Remove tags** checkbox, or press the Control key - while holding it or while the checkbox is checked, each
 tag will display a close icon, which you can click to remove that tag. Beware, this action cannot be undone.
 10. If you want to edit a particular tag, double click it, instead of single click. This will make that tag enter edit mode, where you can change its text. When the focus is moved outside 
 its input field, it will exit edit mode, and the changes will be saved.
@@ -90,6 +138,10 @@ The application's icon was taken from [OnlineWebFonts](https://www.onlinewebfont
 #### Application type
 
 The application was built using [Avalonia UI](https://avaloniaui.net/), for easy cross-platform deployment.
+
+#### Images thumbnails
+
+The library used for displaying the thumbnails is [SixLabors ImageSharp](https://github.com/SixLabors/ImageSharp).
 
 **I greatly appreciate the creators and contributors for providing these assets, packages and technologies.**
 
