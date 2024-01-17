@@ -1,4 +1,5 @@
 src/.vs/*
+src/.vscode/*
 src/.idea/*
 src/.editorconfig
 src/DatasetTag/obj/*
@@ -6,3 +7,4 @@ bin/*
 .git/*
 datasettag.key
 datasettag.key.pub
+.fake
