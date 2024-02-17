@@ -535,7 +535,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void RenderOutputCaption()
     {
         txtOutput.Text = string.Empty;
-        txtOutput.Text += txtTrigger.Text + ", ";
+        txtOutput.Text += !string.IsNullOrWhiteSpace(txtTrigger.Text) ? txtTrigger.Text + ", " : string.Empty;
         Dictionary<TagCategory, List<string>> groupedTexts = new();
         // group the texts by category
         foreach (TagControl tagControl in FindControls<TagControl>(grdSelectedTags))
@@ -606,8 +606,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (string.IsNullOrWhiteSpace(txtSelectedImage.Text))
             await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There is no image selected!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
-        else if (string.IsNullOrWhiteSpace(txtTrigger.Text))
-            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There is no trigger word specified!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
         else if (FindControls<TagControl>(grdSelectedTags).Count == 0)
             await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There are no tags specified!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
         else
@@ -761,6 +759,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 grdTags.ColumnDefinitions[2].Width = new GridLength(desiredSize);
                 grdSelectedTags.Width = panelsWidth;
                 txtOutput.Width = panelsWidth;
+                txtWarning.Width = panelsWidth;
             }
         }
     }
@@ -1105,6 +1104,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// </summary>
     private void Trigger_TextChanged(object? sender, TextChangedEventArgs e)
     {
+        txtWarning.IsVisible = string.IsNullOrWhiteSpace(txtTrigger.Text);
         RenderOutputCaption();
     }
 
@@ -1386,7 +1386,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         else
         {
-            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "The configuration file appsettings.json was not found in the application's directory!\n" + configurationFilePath, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
+            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "The configuration file appsettings.json was not found in the application's directory!" + Environment.NewLine + configurationFilePath, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
             Close();
         }
         SetWrapPanelsMaxWidth();

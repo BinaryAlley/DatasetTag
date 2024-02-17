@@ -4,12 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:DatasetTag.Common.Controls"
         xmlns:enums="clr-namespace:DatasetTag.Common.Enums"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
         x:Class="DatasetTag.MainWindow"
         Title="Dataset Tag" WindowStartupLocation="CenterScreen" WindowState="Maximized" Icon="/Assets/tag.png" Opened="MainWindow_Opened" KeyDown="MainWindow_KeyDown" KeyUp="MainWindow_KeyUp" SizeChanged="MainWindow_SizeChanged" PositionChanged="MainWindow_PositionChanged" LayoutUpdated="MainWindow_LayoutUpdated" MinWidth="800" MinHeight="600">
-  <Window.Resources>
-    <enums:TagCategory x:Key="Hairdd">Hair</enums:TagCategory>
-  </Window.Resources>
   <Grid x:Name="grdContainer">
     <Grid.RowDefinitions>
       <RowDefinition Height="200" MinHeight="150" />
@@ -203,6 +200,9 @@
             </Grid>
             <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
               <Button Content="Save" Command="{Binding SaveCaptionAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="Red" Foreground="White" FontFamily="Arial" Height="50" Padding="0" FontSize="24" FontWeight="Bold" Margin="6" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+            <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+              <TextBox x:Name="txtWarning" TextWrapping="WrapWithOverflow" Text="*** Unless you are preparing the dataset for training a style, a trigger word should always be included! ***" IsEnabled="False" Background="Orange" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="6" FontSize="16"/>
             </Grid>
           </StackPanel>
         </ScrollViewer>
