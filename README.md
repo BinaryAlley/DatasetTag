@@ -108,16 +108,16 @@ Dataset Tag was built using [Avalonia UI](https://avaloniaui.net/), so it is cro
 2. For the **Input Path** field, browse and select the directory containing your images dataset, or manually paste the path in the text box.
 3. Press the **Refresh** button. At this moment, the previews of the images in the specified input directory will be displayed.
 4. Click on any thumbnail, to select that particular image. A larger preview should be displayed on the left column of the window.
-5. Write a trigger word. This is very important, as it will be the word associated with the character or style you are trying to train.
+5. Write a trigger word, *if you are training a character*. This is very important, as it will be the word associated with the character you are trying to train (it will become the word you use to "activate" the character in your prompts). This is NOT necessary when training a style, as styles are supposed to be applied every time you use the model or LoRA, without a trigger word.
 6. Start clicking on any tags in any category that describe the details of the selected image. Order does not matter, as the software will always arrange them in the same categories order.
 Some categories only allow you to select a single tag (example: **Shot** - you cannot have an image where the subject is in both close-up and full-body shot).
 7. If some category does not contain a tag that you want, you can type that tag in the corresponding text field, and then click **Add**, or press Enter.
 8. If there are elements that you feel do not belong to any category, you can add them using the **Miscellaneous** category. 
-9. If there are tags that you want to remove from the selected caption tags, or even tags that you want to remove from the predefined categories, you can check the **Remove tags** checkbox, or press the Control key - while holding it or while the checkbox is checked, each
+9. If there are tags that you want to remove from the selected caption tags, or even tags that you want to remove from the predefined categories, you can check the **Remove tags** checkbox, or press the Control key (does not work on Linux) - while holding it or while the checkbox is checked, each
 tag will display a close icon, which you can click to remove that tag. Beware, this action cannot be undone.
 10. If you want to edit a particular tag, double click it, instead of single click. This will make that tag enter edit mode, where you can change its text. When the focus is moved outside 
 its input field, it will exit edit mode, and the changes will be saved.
-11. While adding tags, the software will automatically create the caption text from the trigger word and the selected tags.
+11. While adding tags, the software will automatically create the caption text from the trigger word (if any) and the selected tags.
 12. When you are satisfied, click on the **Save** button. This will create a text file with the same name as the selected image, containing the caption. The file will be saved in the same directory where the image is, and **it will override an existing caption file**!
 13. The software also creates a file named `captions.json` in the images dataset directory. This file is the one that enables the program to "remember" what each image had as assigned tags and categories. You can remove it if you wish, but the program will treat that image as uncaptioned, the next time you select it.
 
