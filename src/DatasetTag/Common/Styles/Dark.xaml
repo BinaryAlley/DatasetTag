@@ -1,0 +1,15 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=netstandard">
+
+    <Style>
+        <Style.Resources>
+            <Color x:Key="WindowBackground">#232323</Color>
+            <Color x:Key="ImagesPanelBackground">#333333</Color>
+            <Color x:Key="TagsPanelBackground">#353535</Color>
+            <Color x:Key="TagsBackground">#606060</Color>
+            <Color x:Key="SelectedTagsPanelBackground">#373737</Color>
+            <Color x:Key="TextForeground">#FFFFFF</Color>
+        </Style.Resources>
+    </Style>
+</Styles>

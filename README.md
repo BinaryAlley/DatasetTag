@@ -30,6 +30,7 @@ Dataset Tag is a free and open-source tool designed to make the process of image
 - **Memory Feature**: Remembers both the tags in each category and the tags used for each image, allowing for easy edits later.
 - **Replicability**: It ofers the option of copying the trigger words and/or the selected tags using the system's cache memory, and pasting them on other selected images (easy copy/paste of tags among images).
 - **Draggable Panel Columns**: Each column has a grid splitter, which can be used to resize them in any ratio you desire.
+- **Theme**: Light and Dark theme support.
 
 ## Compiling from Source
 

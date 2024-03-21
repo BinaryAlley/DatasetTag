@@ -5,6 +5,7 @@
     <Application.Styles>
       <SimpleTheme />
       <!--<FluentTheme Mode="Light"/>-->
+      <StyleInclude Source="/Common/Styles/Light.xaml"/>
       <StyleInclude Source="/Common/Styles/TextBox.axaml"/>
       <StyleInclude Source="/Common/Styles/ScrollBar.axaml"/>
       <StyleInclude Source="/Common/Styles/ScrollViewer.axaml"/>

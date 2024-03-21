@@ -7,25 +7,32 @@
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
         x:Class="DatasetTag.MainWindow"
         Title="Dataset Tag" WindowStartupLocation="CenterScreen" WindowState="Maximized" Icon="/Assets/tag.png" Opened="MainWindow_Opened" KeyDown="MainWindow_KeyDown" KeyUp="MainWindow_KeyUp" SizeChanged="MainWindow_SizeChanged" PositionChanged="MainWindow_PositionChanged" LayoutUpdated="MainWindow_LayoutUpdated" MinWidth="800" MinHeight="600">
-  <DockPanel>        
-    <Menu DockPanel.Dock="Top">
-      <MenuItem Header="Edit">
-          <MenuItem Header="Copy Selected Tags"  Click="CopySelectedTags_Click"/>
-          <MenuItem Header="Paste Selected Tags" Click="PasteSelectedTags_Click"/>
-          <MenuItem Header="Clear Selected Tags" Click="ClearSelectedTags_Click"/>
+  <DockPanel Background="{DynamicResource WindowBackground}">        
+    <Menu DockPanel.Dock="Top" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}">
+      <MenuItem Header="_File" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}">
+          <MenuItem Header="Theme" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}">
+            <MenuItem Header="Light" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="SetLightTheme_Click"/>
+            <MenuItem Header="Dark" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="SetDarkTheme_Click"/>
+          </MenuItem>
+          <MenuItem Header="Quit" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="CloseApplication_Click"/>
+      </MenuItem>
+      <MenuItem Header="_Edit" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}">
+          <MenuItem Header="Copy Selected Tags" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="CopySelectedTags_Click"/>
+          <MenuItem Header="Paste Selected Tags" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="PasteSelectedTags_Click"/>
+          <MenuItem Header="Clear Selected Tags" Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextForeground}" Click="ClearSelectedTags_Click"/>
       </MenuItem>
     </Menu>        
-    <Grid x:Name="grdContainer">
+    <Grid x:Name="grdContainer" Background="{DynamicResource WindowBackground}">
       <Grid.RowDefinitions>
         <RowDefinition Height="200" MinHeight="150" />
         <RowDefinition Height="5" />
         <RowDefinition Height="*" MinHeight="150" />
       </Grid.RowDefinitions>
-      <Label Content="Input path:" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="6,15,0,0" Width="100" Height="32" FontSize="14"/>
+      <Label Content="Input path:" Grid.Row="0" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="6,15,0,0" Width="100" Height="32" FontSize="14"/>
       <TextBox x:Name="txtInputPath" Grid.Row="0" Margin="90,10,175,0" Height="32" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="14"/>
       <Button Content="Browse..." Command="{Binding BrowseInputAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Grid.Row="0" FontFamily="Arial" Height="32" Width="80" Padding="0" FontSize="14" Margin="0,10,90,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
       <Button Content="Refresh" Command="{Binding RefreshInputAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Grid.Row="0" FontFamily="Arial" Height="32" Width="80" Padding="0" FontSize="14" Margin="0,10,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-      <ScrollViewer Grid.Row="0" Background="LightBlue" Margin="6,45,6,6" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+      <ScrollViewer Grid.Row="0" Background="{DynamicResource ImagesPanelBackground}" Margin="6,45,6,6" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
         <Grid x:Name="grdImages"/>
       </ScrollViewer>
       <GridSplitter Grid.Row="1" Background="Gray" ResizeDirection="Rows"/>
@@ -48,161 +55,161 @@
             <ColumnDefinition Width="50*" MinWidth="265" />
           </Grid.ColumnDefinitions>
           
-          <ScrollViewer x:Name="scrTags" Grid.Column="0" Background="LightCyan" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+          <ScrollViewer x:Name="scrTags" Grid.Column="0" Background="{DynamicResource TagsPanelBackground}" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Margin="0,0,15,0">
               <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                <CheckBox Content="Remove tags" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,6,6,0" Height="32" FontSize="14" Checked="CheckBox_CheckedChanged" Unchecked="CheckBox_CheckedChanged"/>
+                <CheckBox Content="Remove tags" Foreground="{DynamicResource TextForeground}" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,6,6,0" Height="32" FontSize="14" Checked="CheckBox_CheckedChanged" Unchecked="CheckBox_CheckedChanged"/>
               </Grid>
               <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                <Label Content="Trigger word" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,10,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Trigger word" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,10,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtTrigger" Background="#FFFFD1DC" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,6,6,0" Height="32" FontSize="14" TextChanged="Trigger_TextChanged"/>
               </Grid>
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--photo, illustration, drawing, portrait, render, anime-->
-                <Label Content="Type" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Type" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtTypeName" Background="#FFFFE5B4" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="TypeName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewTypeAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFFFE5B4" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdTypes" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdTypes" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--woman, man, mountain, trees, forest, fantasy scene, cityscape-->
-                <Label Content="Subject" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Subject" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtSubjectName" Background="#FFCCCCFF" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="SubjectName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewSubjectAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFCCCCFF" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdSubjects" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdSubjects" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--full body shot, cowboy shot, medium shot, medium close-up shot, close-up shot, extreme close-up shot-->
-                <Label Content="Shot" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Shot" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtShotName" Background="#FFAAD4B6" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="ShotName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewShotAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFAAD4B6" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdShots" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdShots" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--from above, from below, from front, from behind, from side, three-quarters view, rear three-quarters view, overhead, forced perspective, upside down-->
-                <Label Content="Perspective" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Perspective" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtPerspectiveName" Background="#FFABC7CC" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="PerspectiveName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewPerspectiveAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFABC7CC" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdPerspectives" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdPerspectives" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--laying, sitting, standing, leaning, walking, running, jumping, posing-->
-                <Label Content="Pose" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Pose" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtPoseName" Background="#FFD4D2BB" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="PoseName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewPoseAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFD4D2BB" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdPoses" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdPoses" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--on couch, on chair, in front of mirror, at desk, on street-->
-                <Label Content="Location" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Location" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtLocationName" Background="#FFB9B4C8" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="LocationName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewLocationAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFB9B4C8" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdLocations" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdLocations" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--eating, reading, resting, playing-->
-                <Label Content="Action" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Action" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtActionName" Background="#FFBDCDB5" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="ActionName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewActionAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFBDCDB5" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdActions" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdActions" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--looking at viewer, looking up, looking down, looking sideways, three-quarter gaze, rear three quarter gaze, looking sideways and upwards-->
-                <Label Content="Gaze" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Gaze" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtGazeName" Background="#FFADC5C8" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="GazeName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewGazeAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFADC5C8" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdGazes" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdGazes" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--open mouth, closed mouth, slightly open mouth-->
-                <Label Content="Mouth" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Mouth" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtMouthName" Background="#FFD4B0B5" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="MouthName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewMouthAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFD4B0B5" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdMouths" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdMouths" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--smirk, slight smile, smile, laughing, grinning-->
-                <Label Content="Mouth actions" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Mouth actions" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtMouthActionName" Background="#FFD4C2B1" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="MouthActionName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewMouthActionAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFD4C2B1" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdMouthActions" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdMouthActions" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--long hair, short red hair, curly blond hair-->
-                <Label Content="Hair" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Hair" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtHairName" Background="#FFC8B4D4" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="HairName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewHairAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFC8B4D4" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdHairs" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdHairs" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--bent knee, crossed legs, arms raised above head, arms extended sideways, left palm on forehead, right arm on belly, holding books-->
-                <Label Content="Limbs" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Limbs" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtLimbName" Background="#FFD4947D" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="LimbName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewLimbAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFD4947D" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdLimbs" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdLimbs" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--white hat, blue shirt, silver necklace, sunglasses, pink shoes, silver bracelet, green jacket-->
-                <Label Content="Subject description" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Subject description" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtSubjectDescriptionName" Background="#FF98BCCA" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="SubjectDescriptionName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewSubjectDescriptionAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FF98BCCA" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdSubjectDescriptions" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdSubjectDescriptions" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--indoors, outdoors-->
-                <Label Content="Scenery" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Scenery" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtSceneryName" Background="#FFA5D4C5" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="SceneryName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewSceneryAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFA5D4C5" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdSceneries" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdSceneries" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--flowers wallpaper, chair, table, lamp, beach, sand, water, shore-->
-                <Label Content="Scene description" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Scene description" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtSceneDescriptionName" Background="#FFA4C6B4" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="SceneDescriptionName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewSceneDescriptionAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFA4C6B4" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdSceneDescriptions" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdSceneDescriptions" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
 
               <Grid Margin="0,5,0,10" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--sunset, strong shadows, warm orange light, night-->
-                <Label Content="Lighting" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Lighting" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtLightingName" Background="#FFC5ADD4" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="LightingName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddNewLightingAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFC5ADD4" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                <WrapPanel x:Name="grdLightings" Orientation="Horizontal" Background="DarkGray" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdLightings" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6,37,6,0" MinHeight="50" VerticalAlignment="Top"/>
               </Grid>
             </StackPanel>
           </ScrollViewer>
 
           <GridSplitter Grid.Column="1" Background="Gray" ResizeDirection="Columns" DragDelta="GridSplitter_DragDelta"/>
 
-          <ScrollViewer Grid.Column="2" Background="LightSkyBlue" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+          <ScrollViewer Grid.Column="2" Background="{DynamicResource SelectedTagsPanelBackground}" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Margin="0,0,15,0">
               <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                <TextBox x:Name="txtSelectedImage" BorderThickness="0" IsReadOnly="True" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Margin="6,6,6,3" FontSize="14"/>
+                <TextBox x:Name="txtSelectedImage" BorderThickness="0" IsReadOnly="True" Background="Transparent" Foreground="{DynamicResource TextForeground}" VerticalAlignment="Stretch" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Margin="6,6,6,3" FontSize="14"/>
               </Grid>
               <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <TextBox x:Name="txtOutput" TextWrapping="WrapWithOverflow" IsReadOnly="True" Background="DarkCyan" FontWeight="Bold" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="6" FontSize="16"/>
               </Grid>
               <Grid Margin="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                <WrapPanel x:Name="grdSelectedTags" Orientation="Horizontal" Background="DarkGray" Margin="6" MinHeight="150" VerticalAlignment="Top"/>
+                <WrapPanel x:Name="grdSelectedTags" Orientation="Horizontal" Background="{DynamicResource TagsBackground}" Margin="6" MinHeight="150" VerticalAlignment="Top"/>
               </Grid>
               <Grid Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <!--photo, illustration, drawing, portrait, render, anime-->
-                <Label Content="Miscellaneous" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
+                <Label Content="Miscellaneous" Foreground="{DynamicResource TextForeground}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Margin="6,5,0,0" VerticalAlignment="Top" Width="135" Height="32" FontSize="14"/>
                 <TextBox x:Name="txtMiscellaneousName" Background="#FFBC8F8F" VerticalAlignment="Top" HorizontalContentAlignment="Left" Margin="145,0,60,0" Height="32" FontSize="14" KeyUp="MiscellaneousName_KeyUp"/>
                 <Button Content="Add" Command="{Binding AddMiscellaneousAsync_Command, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Background="#FFBC8F8F" FontFamily="Arial" Height="32" Width="50" Padding="0" FontSize="14" Margin="0,0,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
               </Grid>

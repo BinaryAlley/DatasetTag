@@ -34,4 +34,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+   <AvaloniaResource Include="Common\Styles\Dark.xaml" />
+   <AvaloniaResource Include="Common\Styles\Light.xaml" />
+  </ItemGroup>
 </Project>

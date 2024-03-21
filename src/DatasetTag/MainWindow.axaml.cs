@@ -1,6 +1,7 @@
 #region ========================================================================= USING =====================================================================================
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -39,6 +40,7 @@ namespace DatasetTag;
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
     #region ================================================================== FIELD MEMBERS ================================================================================
+    public static event Action<int>? ThemeChanged;
     public new event PropertyChangedEventHandler? PropertyChanged;
     private readonly DispatcherTimer timer;
     private bool isWindowLoaded = false;
@@ -102,6 +104,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         SaveCaptionAsync_Command = new AsyncCommand(SaveCaptionAsync);
         timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         timer.Tick += Timer_Tick;
+        App.styles?.SwitchThemeByIndex(1);
     }
     #endregion
 
@@ -760,7 +763,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// </summary>
     public async Task PasteSelectedTagsAsync()
     {
-      if (string.IsNullOrWhiteSpace(txtSelectedImage.Text))
+        if (string.IsNullOrWhiteSpace(txtSelectedImage.Text))
             await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There is no image selected!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
         else
         {
@@ -873,6 +876,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             timer.Stop();
     }
 
+    /// <summary>
+    /// Event handler for the program quit menu item
+    /// </summary>
+    private async void CloseApplication_Click(object sender, RoutedEventArgs e)
+    {
+        if (await MessageBoxManager.GetMessageBoxStandardWindow("Confirmation", "Are you sure you want to close this program?", 
+            ButtonEnum.YesNo, MessageBox.Avalonia.Enums.Icon.Question).ShowDialog(this) == ButtonResult.Yes)
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopApp)
+                desktopApp.Shutdown();
+    }
+    
+    /// <summary>
+    /// Event handler for the light theme menu item
+    /// </summary>
+    private void SetLightTheme_Click(object sender, RoutedEventArgs e)
+    {
+        ThemeChanged?.Invoke(1);
+    }
+    
+    /// <summary>
+    /// Event handler for the dark theme menu item
+    /// </summary>
+    private void SetDarkTheme_Click(object sender, RoutedEventArgs e)
+    {
+        ThemeChanged?.Invoke(0);
+    }
+    
     /// <summary>
     /// Event handler for the tags copy menu item
     /// </summary>
