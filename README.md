@@ -28,6 +28,7 @@ Dataset Tag is a free and open-source tool designed to make the process of image
 - **Interactive Tagging**: Click on an image and select from pre-existing tags across categories, in order to automatically form a standardized caption.
 - **Consistent Formatting**: Captions are always arranged in the same category order, for consistency.
 - **Memory Feature**: Remembers both the tags in each category and the tags used for each image, allowing for easy edits later.
+- **Replicability**: It ofers the option of copying the trigger words and/or the selected tags using the system's cache memory, and pasting them on other selected images (easy copy/paste of tags among images).
 - **Draggable Panel Columns**: Each column has a grid splitter, which can be used to resize them in any ratio you desire.
 
 ## Compiling from Source

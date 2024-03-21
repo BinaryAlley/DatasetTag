@@ -727,6 +727,73 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Copies selected tags into system memory
+    /// </summary>
+    public async Task CopySelectedTagsAsync()
+    {
+        if (string.IsNullOrWhiteSpace(txtSelectedImage.Text))
+            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There is no image selected!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
+        else if (FindControls<TagControl>(grdSelectedTags).Count == 0)
+            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There are no tags specified!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
+        else
+        {
+            ImageInfoDto? imageInfo = new() // create new ImageInfoDto if it doesn't exist for the selected image
+            {
+                ImageName = txtSelectedImage.Text,
+                TriggerWord = txtTrigger.Text,
+                Categories = FindControls<TagControl>(grdSelectedTags)
+                                        .GroupBy(tag => tag.Category)
+                                        .Select(group => new CategoryDto
+                                        {
+                                            CategoryName = group.Key.ToString(),
+                                            Tags = group.Select(tag => tag.Text).ToList()!
+                                        })
+                                        .ToList()
+            };
+            // serialize the image info and store it in the cache memory
+            await Application.Current?.Clipboard?.SetTextAsync(JsonConvert.SerializeObject(imageInfo, Formatting.Indented));  
+        }
+    }
+
+    /// <summary>
+    /// Pastes selected tags into system memory
+    /// </summary>
+    public async Task PasteSelectedTagsAsync()
+    {
+      if (string.IsNullOrWhiteSpace(txtSelectedImage.Text))
+            await MessageBoxManager.GetMessageBoxStandardWindow("Error!", "There is no image selected!", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error).ShowDialog(this);
+        else
+        {
+            // retrieve text from clipboard
+            string? clipboardText = await Application.Current?.Clipboard?.GetTextAsync();
+            if (!string.IsNullOrEmpty(clipboardText))
+            {
+                try
+                {
+                    // try to deserialize the clipboard text into valid tag collections
+                    ImageInfoDto? imageInfo = JsonConvert.DeserializeObject<ImageInfoDto>(clipboardText);
+                    if (imageInfo is not null && imageInfo.Categories is not null)
+                        foreach (var category in imageInfo.Categories) // iterate the categories of the selected image section
+                            foreach (string tag in category.Tags!) // iterate the tags of each category
+                                grdSelectedTags.Children.Add(CreateNewTag(tag, (TagCategory)Enum.Parse(typeof(TagCategory), category.CategoryName!))); // add the tag
+                    txtTrigger.Text = imageInfo?.TriggerWord;
+                }
+                catch { }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Clears selected tags into system memory
+    /// </summary>
+    public void ClearSelectedTags()
+    {
+        txtTrigger.Text = string.Empty;
+        txtOutput.Text = string.Empty;
+        grdSelectedTags.Children.Clear();
+    }
+
+    /// <summary>
     /// Sets the width of the wrap panels containing tags
     /// </summary>
     private void SetWrapPanelsMaxWidth()
@@ -804,6 +871,30 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         else
             timer.Stop();
+    }
+
+    /// <summary>
+    /// Event handler for the tags copy menu item
+    /// </summary>
+    public async void CopySelectedTags_Click(object sender, RoutedEventArgs e)
+    {
+        await CopySelectedTagsAsync();
+    }
+
+    /// <summary>
+    /// Event handler for the tags copy menu item
+    /// </summary>
+    public async void PasteSelectedTags_Click(object sender, RoutedEventArgs e)
+    {
+        await PasteSelectedTagsAsync();
+    }
+
+    /// <summary>
+    /// Event handler for the tags copy menu item
+    /// </summary>
+    public void ClearSelectedTags_Click(object sender, RoutedEventArgs e)
+    {
+        ClearSelectedTags();
     }
 
     /// <summary>
@@ -1111,9 +1202,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Handles main window's KeyDown event
     /// </summary>
-    private void MainWindow_KeyDown(object? sender, KeyEventArgs e)
+    private async void MainWindow_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.KeyModifiers == KeyModifiers.Control)
+        // when user presses ctrl+c, handle it as copying of tags
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.C)
+            await CopySelectedTagsAsync();
+        else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.V)
+            await PasteSelectedTagsAsync();
+        else if (e.KeyModifiers == KeyModifiers.Control) // otherwise, show the controls for removing tags
             foreach (TagControl tagControl in FindControls<TagControl>(grdContainer))
                 tagControl.IsCloseButtonVisible = true;
     }
